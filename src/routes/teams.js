@@ -7,12 +7,12 @@ import playerService from '../services/playerService.js';
 const router = express.Router();
 
 
-// GET a specific team
+// Pobierz daną drużyne
 router.get('/:id', async (req, res) => {
     const team = await teamService.getTeam(req.params.id); 
     res.json(team)
 })
-// PUT a specific team
+// Dodaj nową drużyne
 router.put('/', async (req, res) => {
     const { league, name, description, stadionAdress, players } = req.body;
     const newTeam = await teamService.addTeam(
@@ -30,7 +30,7 @@ router.put('/', async (req, res) => {
     const teamFinal = await teamService.addPlayers(newTeam.id, resolvedPlayerIds)
     res.json(teamFinal)
 })
-// UPDATE a specific team
+// Zaktualizuj daną drużyne
 router.put('/:id', async (req, res) => {
     const { id, players } = req.body
     const updatedTeam = await teamService.updateTeam(
@@ -45,9 +45,9 @@ router.put('/:id', async (req, res) => {
     const teamFinal = await teamService.addPlayers(id, resolvedPlayerIds)
     res.json(teamFinal)
 })
-//DELETE a specific team
+// Usuń daną drużyne
 router.delete('/:id', async (req, res) => {
     const remove = await teamService.removeTeam(req.params.id)
-    res.json({"message": "Removed team"});
+    res.json({"message": `Usunięto drużyne ${req.params.id}`});
 })
 export default router

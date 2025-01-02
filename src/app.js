@@ -10,10 +10,10 @@ import config from './config.js'
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
-    console.log("Connected to MongoDB")
+    console.log("Połączono z MongoDB")
   })
   .catch((error) => {
-    console.log("Error connecting to MongoDB:", error.message)
+    console.log("Błąd w łączeniu z MongoDB:", error.message)
   })
 
 const app = express()

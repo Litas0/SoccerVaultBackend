@@ -5,26 +5,26 @@ import calendarService from '../services/calendarService.js';
 
 const router = express.Router();
 
-// GET all leagues
+// Poberz wszystkie ligi
 router.get('/', async (req, res) => {
     try {
         const list = await leagueService.getListOfLeagues();
         if (!list || list.length === 0) {
-            return res.status(404).json({ message: 'No leagues found' });
+            return res.status(404).json({ message: 'Nie znaleziono lig' });
         }
         res.json(list);
     } catch (error) {
-        console.error('Error fetching leagues:', error);
-        res.status(500).json({ message: 'An error occurred while fetching leagues' });
+        console.error('Błąd podczas pobierania lig:', error);
+        res.status(500).json({ message: 'Błąd podczas pobierania lig' });
     }
 });
-// PUT new league
+// Dodaj nową lige
 router.put('/', async (req, res) => {
     try {
         const { name, description, rematches, numberOfTeams, ownerId, ownerFullName } = req.body;
         
         if (!name || !description || rematches === undefined || !numberOfTeams || !ownerId || !ownerFullName) {
-            return res.status(400).json({ message: 'Missing required fields' });
+            return res.status(400).json({ message: 'Brak wymganych pól' });
         }
 
         const newLeague = await leagueService.addLeague(
@@ -37,51 +37,51 @@ router.put('/', async (req, res) => {
         );
 
         if (!newLeague) {
-            return res.status(500).json({ message: 'Failed to create new league' });
+            return res.status(500).json({ message: 'Błąd podczas tworzenia ligi' });
         }
 
         res.status(201).json(newLeague);
     } catch (error) {
-        console.error('Error creating new league:', error);
-        res.status(500).json({ message: 'An error occurred while creating the league' });
+        console.error('Błąd podczas tworzenia ligi:', error);
+        res.status(500).json({ message: 'Wystąpił błąd podczas tworzenia ligi' });
     }
 });
-// GET a specific league by ID
+// Pobierz lige po ID
 router.get('/:id', async (req, res) => {
     const league = await leagueService.getLeagueById(req.params.id)
-    if (!league) return res.status(404).json({ message: 'League not found' });
+    if (!league) return res.status(404).json({ message: 'Nie znaleziono ligi' });
     res.json(league);
 })
-// GET league's made by user
+// Pobierz ligi danego użytkownika
 router.get('/user/:id', async (req, res) => {
     const leagues = await leagueService.getLeaguesOfUser(req.params.id);
-    if (!leagues) return res.status(404).json({ message: 'No leagues found' });
+    if (!leagues) return res.status(404).json({ message: 'Nie znaleziono lig' });
     res.json(leagues);
 })
-// GET a specific league's table
+// Pobierz tabele danej ligi
 router.get('/:id/table', async (req, res) => {
     const table = await leagueService.getTable(req.params.id)
-    if (!table) return res.status(404).json({ message: 'Table not found' });
+    if (!table) return res.status(404).json({ message: 'Tabeli nie znaleziono' });
     res.json(table);
 })
-// GET a specific league completed matches
+// Pobierz rozegrane mecze danej ligi
 router.get('/:id/results', async (req, res) => {
     const results = await leagueService.getMatches(req.params.id, true)
-    if (!results) return res.status(404).json({ message: 'Results not found' });
+    if (!results) return res.status(404).json({ message: 'Wyników nie znaleziono' });
     res.json(results);
 })
-// GET a specific league upcoming matches
+// Pobierz nadchodzące mecze danej ligi
 router.get('/:id/upcoming', async (req, res) => {
     const upcoming = await leagueService.getMatches(req.params.id, false)
-    if (!upcoming) return res.status(404).json({ message: 'Results not found' });
+    if (!upcoming) return res.status(404).json({ message: 'Terminarza nie znaleziono' });
     res.json(upcoming);
 })
-// PUT a specyfic league calendar
+// Wygeneruj kalendarz do danej ligi
 router.put('/:id/calendar', async (req, res) => {
     try {
         const league = await leagueService.getLeagueById(req.params.id);
         if (!league) {
-            return res.status(404).json({ message: 'League not found' });
+            return res.status(404).json({ message: 'Ligi nie znaleziono' });
         }
 
         const pairings = await calendarService.makePairings(league.teams, league.rematches);
@@ -92,13 +92,13 @@ router.put('/:id/calendar', async (req, res) => {
 
         res.json(leagueWithCalendar);
     } catch (error) {
-        console.error('Error creating calendar:', error);
-        res.status(500).json({ message: 'An error occurred while creating the calendar' });
+        console.error('Błąd w tworzeniu kalendarza:', error);
+        res.status(500).json({ message: 'Wystąpił błąd podczas tworzenia kalendarza' });
     }
 });
-// DELETE a specyfic league
+// Usuń daną lige
 router.delete('/:id', async (req, res) => {
     const remove = await leagueService.removeLeague(req.params.id)
-    res.json({"message": `Removed league ${req.params.id}`});
+    res.json({"message": `Usunięto ligę ${req.params.id}`});
 })
 export default router;
