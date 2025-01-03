@@ -63,7 +63,7 @@ export const addTeamToLeague = async (leagueId, teamId) => {
 export const addCalendar = async (leagueId, calendar ) => {
     try {
         if (!leagueId || !calendar) {
-            throw new Error('Missing required parameters: leagueId or calendar');
+            throw new Error('Brak wymaganych parametrów');
         }
 
         const league = await League.findByIdAndUpdate(
@@ -73,13 +73,13 @@ export const addCalendar = async (leagueId, calendar ) => {
         ).populate(['teams', 'calendar']);
 
         if (!league) {
-            throw new Error('League not found');
+            throw new Error('Liga nie znaleziona');
         }
 
         return league;
     } catch (error) {
-        console.error('Error adding calendar to league:', error);
-        throw new Error(`Failed to add calendar: ${error.message}`);
+        console.error('Wystąpił błąd podczas dodawania kalendarza:', error);
+        throw new Error(`Wystąpił błąd podczas dodawania kalendarza: ${error.message}`);
     }
 }
 

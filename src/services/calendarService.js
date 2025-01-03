@@ -67,7 +67,7 @@ export const createCalendar = async (pairings, leagueId) => {
               .filter((m) => m.home && m.away)
               .map((m) => {
                 if (!m.home || !m.away) {
-                  throw new Error("Invalid match data: home or away team is missing.");
+                  throw new Error("Drużyna gospodarzy lub gości brakująca");
                 }
                 return {
                   homeTeamId: m.home.id,
@@ -82,15 +82,15 @@ export const createCalendar = async (pairings, leagueId) => {
           const savedRound = await round.save();
           return savedRound.id;
         } catch (error) {
-          console.error(`Error processing round ${index}:`, error);
-          throw new Error(`Failed to create round ${index}: ${error.message}`);
+          console.error(`Wystąpił błąd podczas tworzenia kolejki ${index}:`, error);
+          throw new Error(`Wystąpił błąd podczas tworzenia kolejki ${index}: ${error.message}`);
         }
       })
     );
     return calendar;
   } catch (error) {
-    console.error("Error creating calendar:", error);
-    throw new Error(`Calendar creation failed: ${error.message}`);
+    console.error("Wystąpił błąd podczas towrzenia kalendarza:", error);
+    throw new Error(`Wystąpił błąd podczas towrzenia kalendarza: ${error.message}`);
   }
 };
 

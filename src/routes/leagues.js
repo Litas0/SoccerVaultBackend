@@ -5,7 +5,6 @@ import calendarService from '../services/calendarService.js';
 
 const router = express.Router();
 
-// Poberz wszystkie ligi
 router.get('/', async (req, res) => {
     try {
         const list = await leagueService.getListOfLeagues();
@@ -18,7 +17,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: 'Błąd podczas pobierania lig' });
     }
 });
-// Dodaj nową lige
 router.put('/', async (req, res) => {
     try {
         const { name, description, rematches, numberOfTeams, ownerId, ownerFullName } = req.body;
@@ -46,37 +44,31 @@ router.put('/', async (req, res) => {
         res.status(500).json({ message: 'Wystąpił błąd podczas tworzenia ligi' });
     }
 });
-// Pobierz lige po ID
 router.get('/:id', async (req, res) => {
     const league = await leagueService.getLeagueById(req.params.id)
     if (!league) return res.status(404).json({ message: 'Nie znaleziono ligi' });
     res.json(league);
 })
-// Pobierz ligi danego użytkownika
 router.get('/user/:id', async (req, res) => {
     const leagues = await leagueService.getLeaguesOfUser(req.params.id);
     if (!leagues) return res.status(404).json({ message: 'Nie znaleziono lig' });
     res.json(leagues);
 })
-// Pobierz tabele danej ligi
 router.get('/:id/table', async (req, res) => {
     const table = await leagueService.getTable(req.params.id)
     if (!table) return res.status(404).json({ message: 'Tabeli nie znaleziono' });
     res.json(table);
 })
-// Pobierz rozegrane mecze danej ligi
 router.get('/:id/results', async (req, res) => {
     const results = await leagueService.getMatches(req.params.id, true)
     if (!results) return res.status(404).json({ message: 'Wyników nie znaleziono' });
     res.json(results);
 })
-// Pobierz nadchodzące mecze danej ligi
 router.get('/:id/upcoming', async (req, res) => {
     const upcoming = await leagueService.getMatches(req.params.id, false)
     if (!upcoming) return res.status(404).json({ message: 'Terminarza nie znaleziono' });
     res.json(upcoming);
 })
-// Wygeneruj kalendarz do danej ligi
 router.put('/:id/calendar', async (req, res) => {
     try {
         const league = await leagueService.getLeagueById(req.params.id);
@@ -96,7 +88,6 @@ router.put('/:id/calendar', async (req, res) => {
         res.status(500).json({ message: 'Wystąpił błąd podczas tworzenia kalendarza' });
     }
 });
-// Usuń daną lige
 router.delete('/:id', async (req, res) => {
     const remove = await leagueService.removeLeague(req.params.id)
     res.json({"message": `Usunięto ligę ${req.params.id}`});
